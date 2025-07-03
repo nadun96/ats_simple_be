@@ -33,4 +33,6 @@ This project is a simple backend API built with Django and Django REST Framework
 
 ## API
 
-The API is powered by Django REST Framework. Access the browsable API at `http://localhost:8000/api/`.
+The API is powered by Django REST Framework. Access the browsable API at `http://127.0.0.1:8000/api/schema/swagger-ui/` OR `http://127.0.0.1:8000/api/`.
+
+
