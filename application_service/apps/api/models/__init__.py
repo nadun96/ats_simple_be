@@ -1,6 +1,3 @@
-from django.db import models
-
-# Import all your models
 from .candidate import Candidate
 from .job import Job, PipelineStage
 from .application import Application
