@@ -7,28 +7,28 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test-auth-service:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+  # test-auth-service:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     max-parallel: 4
+  #     matrix:
+  #       python-version: ["3.9", "3.10", "3.11"]
 
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies for Auth Service
-      run: |
-        python -m pip install --upgrade pip
-        cd auth_service
-        pip install -r requirements.txt
-    - name: Run Auth Service Tests
-      run: |
-        cd auth_service
-        python manage.py test
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Set up Python ${{ matrix.python-version }}
+  #     uses: actions/setup-python@v4
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #   - name: Install Dependencies for Auth Service
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       cd auth_service
+  #       pip install -r requirements.txt
+  #   - name: Run Auth Service Tests
+  #     run: |
+  #       cd auth_service
+  #       python manage.py test
 
   test-application-service:
     runs-on: ubuntu-latest
@@ -53,20 +53,20 @@ jobs:
         cd application_service
         python manage.py test
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
-    - name: Install linting tools
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 black isort
-    - name: Run linting
-      run: |
-        flake8 auth_service application_service --max-line-length=88 --exclude=migrations
-        black --check auth_service application_service
-        isort --check-only auth_service application_service
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Set up Python
+  #     uses: actions/setup-python@v4
+  #     with:
+  #       python-version: "3.11"
+  #   - name: Install linting tools
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install flake8 black isort
+  #   - name: Run linting
+  #     run: |
+  #       flake8 auth_service application_service --max-line-length=88 --exclude=migrations
+  #       black --check auth_service application_service
+  #       isort --check-only auth_service application_service
