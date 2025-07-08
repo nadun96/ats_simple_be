@@ -38,3 +38,24 @@ class PipelineStage(models.Model):
 
     def __str__(self):
         return f"{self.job.title} - {self.name}"
+
+
+class JobDescription(models.Model):
+    company_name = models.CharField(max_length=255)
+    url_of_site = models.URLField()
+    company_description = models.TextField()
+    company_logo = models.URLField(blank=True)
+    job_title = models.CharField(max_length=255)
+    country = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    isRemote = models.BooleanField()
+    type_of_contract = models.CharField(max_length=100)
+    job_description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'job_descriptions'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.company_name} - {self.job_title}"
