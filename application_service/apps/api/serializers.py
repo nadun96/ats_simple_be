@@ -17,6 +17,7 @@ class JobDescriptionSerializer(serializers.ModelSerializer):
             'type_of_contract',
             'job_description',
             'created_at',
+            'banner_image',
         ]
 
 class ApplicationSerializer(serializers.ModelSerializer):
