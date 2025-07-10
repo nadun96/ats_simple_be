@@ -52,6 +52,7 @@ class JobDescription(models.Model):
     type_of_contract = models.CharField(max_length=100)
     job_description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    banner_image = models.ImageField(upload_to='banners/', blank=True, null=True)
 
     class Meta:
         db_table = 'job_descriptions'

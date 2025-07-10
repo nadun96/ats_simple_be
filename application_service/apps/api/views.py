@@ -7,9 +7,19 @@ from .serializers import JobDescriptionSerializer, ApplicationSerializer
 from rest_framework.generics import ListAPIView
 from .models.application import Application
 from .models.job import JobDescription
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class JobDescriptionView(APIView):
     permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser, FormParser]
+
+    @swagger_auto_schema(
+        operation_description="Create a new job description.",
+        request_body=JobDescriptionSerializer,
+        responses={201: JobDescriptionSerializer},
+    )
     def post(self, request):
         serializer = JobDescriptionSerializer(data=request.data)
         if serializer.is_valid():

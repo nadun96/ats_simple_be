@@ -14,10 +14,13 @@ class Interview(models.Model):
         blank=True,
         null=True,
         help_text="Array of user IDs for interview panel"
+        
+        
     )
 
     class Meta:
         db_table = 'interviews'
+        
         ordering = ['scheduled_time']
 
     def __str__(self):
