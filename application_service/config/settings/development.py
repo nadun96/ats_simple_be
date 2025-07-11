@@ -1,4 +1,5 @@
 from .base import *
+import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -7,13 +8,15 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 # TODO: Move sensitive data to environment variables
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '4rC1PdylsRDMx2QnFqHG',
-        'HOST': 'ats-simple.cyunfscdc42m.us-east-2.rds.amazonaws.com',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DATABASE_NAME"),
+        "USER": os.environ.get("DATABASE_USER"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+        "HOST": os.environ.get(
+            "DATABASE_HOST",
+        ),
+        "PORT": "5432",
     }
 }
 
