@@ -1,14 +1,21 @@
 from .base import *
+import environ
 import os
+
 DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+env = environ.Env()
+environ.Env.read_env()
 
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+CORS_ALLOW_ALL_ORIGINS = True
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
+print("🧪 DB Host:", os.environ.get("DATABASE_HOST"))
+print("🧪 DB User:", os.environ.get("DATABASE_USER"))
 # Use PostgreSQL in production
 DATABASES = {
     "default": {
