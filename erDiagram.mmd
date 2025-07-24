@@ -1,0 +1,143 @@
+erDiagram
+    %% ────────────────────────── CORE RECRUITMENT OBJECTS ──────────────────────────
+    JOB {
+        int     job_id PK
+        string  title
+        string  description
+        string  location
+        date    date_created
+    }
+
+    APPLICATIONFORM {
+        int     form_id PK
+        int     job_id  FK
+        bool    simplified_flag
+        string  template_name
+    }
+
+    QUESTION {
+        int     question_id PK
+        int     form_id     FK
+        string  label
+        string  field_type
+        string  linked_property
+    }
+
+    ANSWEROPTION {
+        int     option_id PK
+        int     question_id FK
+        string  display_text
+        string  stored_value
+        int     sort_order
+    }
+
+    %% ─────────────────────────── CANDIDATE SIDE ───────────────────────────
+    CANDIDATE {
+        int     candidate_id PK
+        string  first_name
+        string  last_name
+        string  email
+        string  phone
+        file    resume
+    }
+
+    APPLICATION {
+        int     application_id PK
+        int     candidate_id   FK
+        int     job_id         FK
+        date    applied_at
+        string  status        
+    }
+
+    ANSWER {
+        int     answer_id PK
+        int     application_id FK
+        int     question_id    FK
+        int     option_id FK  "nullable for free-text answers"
+        string  free_text_value
+    }
+
+    %% ────────────────────────── WORKFLOW ENGINE ──────────────────────────
+
+    WORKFLOW {
+        int     workflow_id PK
+        int     job_id      FK
+        string  name
+        date    created_at
+    }
+
+    WORKFLOWSTEP {
+        int     step_id PK
+        int     workflow_id FK
+        int     step_order
+        string  name
+        string  step_type  
+    }
+
+    TASK {
+        int     task_id PK
+        int     step_id FK
+        int     assignee_id FK 
+        string  description
+        date    due_date
+        string  status
+    }
+
+    NOTIFICATION {
+        int     notification_id PK
+        int     step_id     FK
+        string  channel    
+        string  template_name
+        bool    trigger_on_entry
+    }
+
+
+
+    USER {
+        int     user_id PK
+        string  name
+        string  email
+        string  role        
+    }
+
+    JOBTEAM {
+        int     job_id  FK
+        int     user_id FK
+        string  responsibility  
+        %% Composite primary key: (job_id, user_id)
+    }
+
+    %% ────────────────────── JOB PROMOTION / PUBLISHING ──────────────────────
+    JOBBOARD {
+        int     board_id PK
+        string  name
+        string  url
+    }
+
+    JOBPUBLICATION {
+        int     publication_id PK
+        int     job_id   FK
+        int     board_id FK
+        date    published_at
+        string  status       
+        string  posting_url
+    }
+
+    %% ─────────────────────────── RELATIONSHIPS ───────────────────────────
+    JOB         ||--o{ APPLICATIONFORM   : "has 1 form"
+    APPLICATIONFORM ||--o{ QUESTION      : "contains"
+    QUESTION    ||--o{ ANSWEROPTION      : "has"
+    CANDIDATE   ||--o{ APPLICATION       : "submits"
+    JOB         ||--o{ APPLICATION       : "receives"
+    APPLICATION ||--o{ ANSWER            : "records"
+    QUESTION    ||--|| ANSWER            : "answered by"
+    JOB         ||--|| WORKFLOW          : "uses"
+    WORKFLOW    ||--o{ WORKFLOWSTEP      : "steps"
+    WORKFLOWSTEP||--o{ TASK              : "creates"
+    WORKFLOWSTEP||--o{ NOTIFICATION      : "triggers"
+    USER        ||--o{ TASK              : "assigned to"
+    JOB         ||--o{ JOBTEAM           : "staffed by"
+    USER        ||--o{ JOBTEAM           : "joins"
+    JOB         ||--o{ JOBPUBLICATION    : "published as"
+    JOBBOARD    ||--o{ JOBPUBLICATION    : "hosts"
+                                                              
