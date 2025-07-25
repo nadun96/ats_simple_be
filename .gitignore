@@ -92,3 +92,4 @@ Pipfile.lock
 *.pem
 *.key
 *.crt
+/notification_service/IMPLEMENTATION_SUMMARY.md
