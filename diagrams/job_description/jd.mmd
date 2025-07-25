@@ -1,0 +1,49 @@
+erDiagram
+    Job ||--o{ Application : "receives"
+    Application }o--|| Candidate : "by"
+    Job }o--|| Society : "posted by"
+    Job ||--|| JobDescription : "has"
+
+    Job {
+        bigint id PK
+        varchar title
+        text requirements
+        bigint society_id FK
+        bigint job_description_id FK
+        timestamp created_at
+    }
+
+    Society {
+        bigint id PK
+        varchar name
+        varchar url
+        varchar logo
+    }
+
+    Application {
+        bigint id PK
+        bigint job_id FK
+        bigint candidate_id FK
+        timestamp applied_at
+        varchar status
+    }
+
+    Candidate {
+        bigint id PK
+        varchar name
+        varchar email
+        varchar phone
+        varchar cv_url
+        varchar address
+        json other_details
+    }
+
+    JobDescription {
+        bigint id PK
+        enum type
+        int duration_years
+        int duration_months
+        int duration_days
+        enum work_mode
+        text details
+    }

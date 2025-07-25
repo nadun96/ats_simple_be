@@ -1,0 +1,60 @@
+erDiagram
+    Job ||--o{ JobWorkflow : "has stages"
+    WorkflowTemplate ||--o{ WorkflowStageTemplate : "defines stages"
+    JobWorkflow ||--o{ StageTask : "has"
+    JobWorkflow ||--o{ StageNotification : "triggers"
+    StageNotification ||--o{ CeleryTaskQueue : "queued in"
+
+    Job {
+        bigint id PK
+        varchar title
+        text description
+        bigint workflow_template_id FK
+        timestamp created_at
+    }
+
+    WorkflowTemplate {
+        bigint id PK
+        varchar name
+        text description
+        timestamp created_at
+    }
+
+    WorkflowStageTemplate {
+        bigint id PK
+        bigint template_id FK
+        int order_index
+        varchar stage_name
+    }
+
+    JobWorkflow {
+        bigint id PK
+        bigint job_id FK
+        int stage_order
+        varchar stage_name
+    }
+
+    StageTask {
+        bigint id PK
+        bigint job_workflow_id FK
+        enum task_type
+        text description
+        varchar assignee_role
+    }
+
+    StageNotification {
+        bigint id PK
+        bigint job_workflow_id FK
+        enum notification_type
+        enum recipient
+        text message_template
+        datetime send_time
+    }
+
+    CeleryTaskQueue {
+        bigint id PK
+        bigint notification_id FK
+        enum status
+        datetime scheduled_at
+        datetime sent_at
+    }

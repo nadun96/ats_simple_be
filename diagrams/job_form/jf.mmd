@@ -1,0 +1,63 @@
+erDiagram
+    Job ||--|| FormTemplate : "uses"
+    FormTemplate ||--o{ Question : "has"
+    Question ||--o{ QuestionOption : "has (for selectable types)"
+    FormSubmission }o--|| Job : "for"
+    FormSubmission }o--|| FormTemplate : "of"
+    FormSubmission ||--o{ Answer : "has"
+    Question ||--o{ Answer : "is answered by"
+    QuestionOption ||--o{ Answer : "selected in (optional)"
+
+    Job {
+      bigint id PK
+      varchar title
+      text description
+      bigint form_template_id UK,FK
+      timestamp created_at
+    }
+        
+    FormTemplate {
+      bigint id PK
+      varchar name
+      int version
+      bool is_active
+      timestamp created_at
+    }
+
+    Question {
+      bigint id PK
+      bigint template_id FK
+      int order_index
+      varchar label
+      text help_text
+      enum type
+      bool is_required
+      json validation_rules
+      json custom_schema
+    }
+
+    QuestionOption {
+      bigint id PK
+      bigint question_id FK
+      varchar label
+      varchar value
+      int order_index
+    }
+
+    FormSubmission {
+      bigint id PK
+      bigint job_id FK
+      bigint template_id FK
+      bigint applicant_id
+      timestamp submitted_at
+      varchar status
+    }
+
+    Answer {
+      bigint id PK
+      bigint submission_id FK
+      bigint question_id FK
+      text value_text
+      bigint option_id
+      json option_ids
+    }
