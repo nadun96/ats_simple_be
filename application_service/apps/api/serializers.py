@@ -18,6 +18,12 @@ class JobDescriptionSerializer(serializers.ModelSerializer):
             'job_description',
             'created_at',
             'banner_image',
+            'contract_length',
+            'work_time',
+            'candidate_profile',
+            'visibility_of_job',
+            'department',
+            'qualification_level',
         ]
 
 class ApplicationSerializer(serializers.ModelSerializer):

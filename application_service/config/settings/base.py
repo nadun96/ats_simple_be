@@ -1,11 +1,25 @@
-import os
 from pathlib import Path
+import environ
+
+# Initialize django-environ
+env = environ.Env(
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, "django-insecure-change-this-in-production"),
+    DATABASE_NAME=(str, "db_ats"),
+    DATABASE_USER=(str, "postgres"),
+    DATABASE_PASSWORD=(str, "KmUFDusYmLwnYGTQPZ5V"),
+    DATABASE_HOST=(str, "db-ats.cgtw64a4ev5q.us-east-1.rds.amazonaws.com"),
+    DATABASE_PORT=(str, "5432"),
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+# Take environment variables from .env file (located in project root)
+environ.Env.read_env(BASE_DIR.parent / ".env")
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-production')
+SECRET_KEY = env("SECRET_KEY")
 
 # Application definition
 DJANGO_APPS = [
@@ -63,16 +77,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+print("🧪 DB Host:", env("DATABASE_HOST"))
+print("🧪 DB User:", env("DATABASE_USER"))
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '4rC1PdylsRDMx2QnFqHG',
-        'HOST': 'ats-simple.cyunfscdc42m.us-east-2.rds.amazonaws.com',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("DATABASE_NAME"),
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASSWORD"),
+        "HOST": env("DATABASE_HOST"),
+        "PORT": env("DATABASE_PORT"),
     }
 }
 
@@ -122,10 +137,13 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# CORS settings
+# CORS settings (will be overridden in environment-specific settings)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://3.83.252.93:8000",
+    "http://localhost",  # Add scheme here
+    "http://3.83.252.93",  # Optional, but include port if needed
 ]
 
 # TODO: Remove this in production

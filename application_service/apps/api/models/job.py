@@ -41,6 +41,29 @@ class PipelineStage(models.Model):
 
 
 class JobDescription(models.Model):
+    WORK_TIME_CHOICES = [
+        ('full-time', 'Full-time'),
+        ('part-time', 'Part-time'),
+        ('contract', 'Contract Basis'),
+        ('internship', 'Internship'),
+        ('freelance', 'Freelance'),
+    ]
+    
+    VISIBILITY_CHOICES = [
+        ('public', 'Public'),
+        ('internal_distribution', 'Internal Distribution'),
+        ('restricted', 'Restricted'),
+    ]
+    
+    QUALIFICATION_LEVEL_CHOICES = [
+        ('entry', 'Entry Level'),
+        ('junior', 'Junior Level'),
+        ('mid', 'Mid Level'),
+        ('senior', 'Senior Level'),
+        ('lead', 'Lead Level'),
+        ('executive', 'Executive Level'),
+    ]
+
     company_name = models.CharField(max_length=255)
     url_of_site = models.URLField()
     company_description = models.TextField()
@@ -53,6 +76,12 @@ class JobDescription(models.Model):
     job_description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     banner_image = models.ImageField(upload_to='banners/', blank=True, null=True)
+    contract_length = models.PositiveIntegerField(help_text="Contract length in days", null=True, blank=True)
+    work_time = models.CharField(max_length=50, choices=WORK_TIME_CHOICES, default='full-time')
+    candidate_profile = models.TextField(help_text="Expected qualifications, experience, and candidate profile", blank=True)
+    visibility_of_job = models.CharField(max_length=50, choices=VISIBILITY_CHOICES, default='public')
+    department = models.CharField(max_length=200, blank=True)
+    qualification_level = models.CharField(max_length=50, choices=QUALIFICATION_LEVEL_CHOICES, default='mid')
 
     class Meta:
         db_table = 'job_descriptions'
