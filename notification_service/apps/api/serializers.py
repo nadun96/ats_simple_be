@@ -3,6 +3,8 @@ from .models.job import JobDescription
 from .models.application import Application
 from .models.task import Task
 from .models.notification import Notification
+from .models.workflow import Workflow
+from .models.workflowstep import WorkflowStep
 from django.contrib.auth.models import User
 
 
@@ -120,3 +122,77 @@ class NotificationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = ["step_id", "channel", "template_name", "trigger_on_entry"]
+
+
+class WorkflowStepSerializer(serializers.ModelSerializer):
+    """Serializer for WorkflowStep model"""
+
+    class Meta:
+        model = WorkflowStep
+        fields = [
+            "step_id",
+            "workflow",
+            "step_order",
+            "name",
+            "step_type",
+            "description",
+            "is_active",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["step_id", "created_at", "updated_at"]
+
+    def validate_step_order(self, value):
+        """Validate that step_order is positive"""
+        if value <= 0:
+            raise serializers.ValidationError("Step order must be positive")
+        return value
+
+
+class WorkflowStepCreateSerializer(serializers.ModelSerializer):
+    """Serializer for creating workflow steps"""
+
+    class Meta:
+        model = WorkflowStep
+        fields = [
+            "workflow",
+            "step_order",
+            "name",
+            "step_type",
+            "description",
+            "is_active",
+        ]
+
+
+class WorkflowSerializer(serializers.ModelSerializer):
+    """Serializer for Workflow model"""
+
+    steps = WorkflowStepSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Workflow
+        fields = [
+            "workflow_id",
+            "job",
+            "name",
+            "created_at",
+            "updated_at",
+            "steps",
+        ]
+        read_only_fields = ["workflow_id", "created_at", "updated_at"]
+
+
+class WorkflowCreateSerializer(serializers.ModelSerializer):
+    """Serializer for creating workflows"""
+
+    class Meta:
+        model = Workflow
+        fields = ["job", "name"]
+
+    def validate_job(self, value):
+        """Validate that job doesn't already have a workflow"""
+        if hasattr(value, "workflow"):
+            raise serializers.ValidationError(
+                "This job already has a workflow assigned"
+            )
+        return value

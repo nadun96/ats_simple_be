@@ -7,6 +7,10 @@ from .views import (
     TaskDetailView,
     NotificationListCreateView,
     NotificationDetailView,
+    WorkflowListCreateView,
+    WorkflowDetailView,
+    WorkflowStepListCreateView,
+    WorkflowStepDetailView,
 )
 
 urlpatterns = [
@@ -31,5 +35,27 @@ urlpatterns = [
         "notifications/<int:notification_id>/",
         NotificationDetailView.as_view(),
         name="notification-detail",
+    ),
+    # Workflow endpoints
+    path(
+        "workflows/",
+        WorkflowListCreateView.as_view(),
+        name="workflow-list-create",
+    ),
+    path(
+        "workflows/<int:workflow_id>/",
+        WorkflowDetailView.as_view(),
+        name="workflow-detail",
+    ),
+    # Workflow Step endpoints
+    path(
+        "workflow-steps/",
+        WorkflowStepListCreateView.as_view(),
+        name="workflow-step-list-create",
+    ),
+    path(
+        "workflow-steps/<int:step_id>/",
+        WorkflowStepDetailView.as_view(),
+        name="workflow-step-detail",
     ),
 ]

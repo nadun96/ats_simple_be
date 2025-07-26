@@ -5,6 +5,8 @@ from .models.communication import Email, Note
 from .models.task import Task
 from .models.interview import Interview
 from .models.notification import Notification
+from .models.workflow import Workflow
+from .models.workflowstep import WorkflowStep
 
 __all__ = [
     "Candidate",
@@ -16,4 +18,6 @@ __all__ = [
     "Task",
     "Interview",
     "Notification",
+    "Workflow",
+    "WorkflowStep",
 ]
