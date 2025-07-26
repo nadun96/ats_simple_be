@@ -11,6 +11,11 @@ from .views import (
     WorkflowDetailView,
     WorkflowStepListCreateView,
     WorkflowStepDetailView,
+    WorkflowTemplateListCreateView,
+    WorkflowTemplateDetailView,
+    WorkflowStageTemplateListCreateView,
+    WorkflowStageTemplateDetailView,
+    WorkflowFromTemplateView,
 )
 
 urlpatterns = [
@@ -57,5 +62,33 @@ urlpatterns = [
         "workflow-steps/<int:step_id>/",
         WorkflowStepDetailView.as_view(),
         name="workflow-step-detail",
+    ),
+    # Workflow Template endpoints
+    path(
+        "workflow-templates/",
+        WorkflowTemplateListCreateView.as_view(),
+        name="workflow-template-list-create",
+    ),
+    path(
+        "workflow-templates/<int:id>/",
+        WorkflowTemplateDetailView.as_view(),
+        name="workflow-template-detail",
+    ),
+    # Workflow Stage Template endpoints
+    path(
+        "workflow-stage-templates/",
+        WorkflowStageTemplateListCreateView.as_view(),
+        name="workflow-stage-template-list-create",
+    ),
+    path(
+        "workflow-stage-templates/<int:id>/",
+        WorkflowStageTemplateDetailView.as_view(),
+        name="workflow-stage-template-detail",
+    ),
+    # Workflow from Template endpoint
+    path(
+        "workflows/create-from-template/",
+        WorkflowFromTemplateView.as_view(),
+        name="workflow-create-from-template",
     ),
 ]
