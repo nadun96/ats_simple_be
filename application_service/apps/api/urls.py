@@ -44,6 +44,13 @@ from .views import (
     JobDescriptionView,
     ApplicationListView,
     JobDescriptionListView,
+    # New Application and Candidate endpoints
+    CandidateListCreateView,
+    CandidateDetailView,
+    ApplicationListCreateView,
+    ApplicationDetailView,
+    ApplicationAdvanceStageView,
+    ApplicationMoveStageView,
 )
 
 urlpatterns = [
@@ -147,4 +154,35 @@ urlpatterns = [
         name="job-description-list",
     ),
     path("applications/", ApplicationListView.as_view(), name="application-list"),
+    # ===== NEW APPLICATION & CANDIDATE ENDPOINTS =====
+    # Candidate endpoints
+    path(
+        "candidates/", CandidateListCreateView.as_view(), name="candidate-list-create"
+    ),
+    path(
+        "candidates/<int:candidate_id>/",
+        CandidateDetailView.as_view(),
+        name="candidate-detail",
+    ),
+    # Enhanced Application endpoints
+    path(
+        "v2/applications/",
+        ApplicationListCreateView.as_view(),
+        name="application-v2-list-create",
+    ),
+    path(
+        "v2/applications/<int:application_id>/",
+        ApplicationDetailView.as_view(),
+        name="application-v2-detail",
+    ),
+    path(
+        "v2/applications/<int:application_id>/advance/",
+        ApplicationAdvanceStageView.as_view(),
+        name="application-advance-stage",
+    ),
+    path(
+        "v2/applications/<int:application_id>/move-stage/",
+        ApplicationMoveStageView.as_view(),
+        name="application-move-stage",
+    ),
 ]

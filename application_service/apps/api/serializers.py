@@ -15,7 +15,12 @@ from .models.job import (
     StepLink,
     JobSite,
 )
-from .models.application import Application
+from .models.application import (
+    Application,
+    ApplicationStageHistory,
+    ApplicationFormAnswer,
+)
+from .models.candidate import Candidate
 
 
 class SocietySerializer(serializers.ModelSerializer):
@@ -453,4 +458,219 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'current_stage',
             'status',
             'applied_at',
+        ]
+
+
+# New comprehensive serializers for enhanced functionality
+
+
+class CandidateSerializer(serializers.ModelSerializer):
+    full_name = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Candidate
+        fields = [
+            "candidate_id",
+            "first_name",
+            "last_name",
+            "full_name",
+            "email",
+            "phone",
+            "address",
+            "city",
+            "country",
+            "linkedin_url",
+            "portfolio_url",
+            "resume_file_path",
+            "cover_letter",
+            "parsed_cv_data",
+            "skills",
+            "experience_years",
+            "education",
+            "work_experience",
+            "certifications",
+            "languages",
+            "created_at",
+            "updated_at",
+        ]
+        extra_kwargs = {
+            "resume_file_path": {"required": False},
+            "cover_letter": {"required": False},
+        }
+
+
+class ApplicationFormAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationFormAnswer
+        fields = [
+            "id",
+            "application",
+            "field_id",
+            "field_name",
+            "answer_value",
+            "answer_file",
+            "created_at",
+        ]
+
+
+class ApplicationStageHistorySerializer(serializers.ModelSerializer):
+    from_stage_name = serializers.CharField(
+        source="from_stage.step_name", read_only=True
+    )
+    to_stage_name = serializers.CharField(source="to_stage.step_name", read_only=True)
+
+    class Meta:
+        model = ApplicationStageHistory
+        fields = [
+            "id",
+            "application",
+            "from_stage",
+            "from_stage_name",
+            "to_stage",
+            "to_stage_name",
+            "changed_by",
+            "notes",
+            "created_at",
+        ]
+
+
+class DetailedApplicationSerializer(serializers.ModelSerializer):
+    candidate = CandidateSerializer(read_only=True)
+    job_title = serializers.CharField(source="job.title", read_only=True)
+    job_company = serializers.CharField(source="job.company.name", read_only=True)
+    current_stage_name = serializers.CharField(
+        source="current_stage.step_name", read_only=True
+    )
+    individual_answers = ApplicationFormAnswerSerializer(many=True, read_only=True)
+    stage_history = ApplicationStageHistorySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Application
+        fields = [
+            "application_id",
+            "job",
+            "job_title",
+            "job_company",
+            "candidate",
+            "current_stage",
+            "current_stage_name",
+            "status",
+            "stage_order",
+            "form_answers",
+            "individual_answers",
+            "notes",
+            "internal_notes",
+            "source",
+            "rating",
+            "tags",
+            "is_starred",
+            "is_archived",
+            "applied_at",
+            "updated_at",
+            "processed_at",
+            "stage_history",
+        ]
+
+
+class CreateApplicationSerializer(serializers.ModelSerializer):
+    candidate_data = CandidateSerializer(write_only=True, required=False)
+    form_answers = serializers.JSONField(required=False)
+    candidate_id = serializers.IntegerField(write_only=True, required=False)
+
+    class Meta:
+        model = Application
+        fields = [
+            "job",
+            "candidate_id",
+            "candidate_data",
+            "form_answers",
+            "notes",
+            "source",
+            "tags",
+        ]
+
+    def validate(self, attrs):
+        candidate_data = attrs.get("candidate_data")
+        candidate_id = attrs.get("candidate_id")
+
+        if not candidate_data and not candidate_id:
+            raise serializers.ValidationError(
+                "Either candidate_data or candidate_id must be provided"
+            )
+
+        if candidate_data and candidate_id:
+            raise serializers.ValidationError(
+                "Provide either candidate_data or candidate_id, not both"
+            )
+
+        return attrs
+
+    def create(self, validated_data):
+        candidate_data = validated_data.pop("candidate_data", None)
+        candidate_id = validated_data.pop("candidate_id", None)
+        form_answers = validated_data.pop("form_answers", {})
+
+        # Get or create candidate
+        if candidate_data:
+            # Check if candidate with email already exists
+            email = candidate_data.get("email")
+            candidate, created = Candidate.objects.get_or_create(
+                email=email, defaults=candidate_data
+            )
+        else:
+            try:
+                candidate = Candidate.objects.get(candidate_id=candidate_id)
+            except Candidate.DoesNotExist:
+                raise serializers.ValidationError(
+                    f"Candidate with ID {candidate_id} does not exist"
+                )
+
+        # Create application
+        application = Application.objects.create(
+            candidate=candidate, form_answers=form_answers, **validated_data
+        )
+
+        # Set initial workflow stage
+        if application.job.workflow:
+            first_stage = (
+                application.job.workflow.steps.filter(is_active=True)
+                .order_by("order")
+                .first()
+            )
+            if first_stage:
+                application.current_stage = first_stage
+                application.stage_order = first_stage.order
+                application.save()
+
+                # Create stage history entry
+                ApplicationStageHistory.objects.create(
+                    application=application,
+                    to_stage=first_stage,
+                    notes="Application created and moved to initial stage",
+                )
+
+        # Create individual form answers
+        for field_id, answer in form_answers.items():
+            if answer:  # Only create if answer is not empty
+                ApplicationFormAnswer.objects.create(
+                    application=application,
+                    field_id=field_id,
+                    field_name=field_id,  # You might want to get actual field name from job form
+                    answer_value=str(answer),
+                )
+
+        return application
+
+
+class ApplicationUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = [
+            "status",
+            "notes",
+            "internal_notes",
+            "rating",
+            "tags",
+            "is_starred",
+            "is_archived",
         ]
