@@ -7,6 +7,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Make startup script executable
+RUN chmod +x startup.sh
+
 EXPOSE 8002
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8002"]
+CMD ["./startup.sh"]
