@@ -3,15 +3,16 @@ services:
     image: postgres:15
     container_name: ats_postgres
     environment:
-      POSTGRES_DB: ats_db
+      POSTGRES_DB: postgres
       POSTGRES_USER: ats_user
       POSTGRES_PASSWORD: ats_password
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ats_user -d ats_db"]
+      test: ["CMD-SHELL", "pg_isready -U ats_user -d postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -55,6 +56,7 @@ services:
       - "8000:8000"
     volumes:
       - ./auth_service:/app
+      - ./scripts/wait-for-db.sh:/app/wait-for-db.sh
     env_file:
       - .env
     environment:
@@ -63,7 +65,9 @@ services:
       postgres:
         condition: service_healthy
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "chmod +x /app/wait-for-db.sh &&
+             /app/wait-for-db.sh postgres 5432 ats_user ats_password auth_db &&
+             python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
 
   application_service:
@@ -75,6 +79,7 @@ services:
       - "8001:8000"
     volumes:
       - ./application_service:/app
+      - ./scripts/wait-for-db.sh:/app/wait-for-db.sh
     env_file:
       - .env
     environment:
@@ -83,7 +88,9 @@ services:
       postgres:
         condition: service_healthy
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "chmod +x /app/wait-for-db.sh &&
+             /app/wait-for-db.sh postgres 5432 ats_user ats_password ats_db &&
+             python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
 
   email_service:
@@ -95,6 +102,7 @@ services:
       - "8002:8002"
     volumes:
       - ./email_service:/app
+      - ./scripts/wait-for-db.sh:/app/wait-for-db.sh
     env_file:
       - .env
     environment:
@@ -109,7 +117,9 @@ services:
       rabbitmq:
         condition: service_healthy
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "chmod +x /app/wait-for-db.sh &&
+             /app/wait-for-db.sh postgres 5432 ats_user ats_password email_db &&
+             python manage.py migrate &&
              python manage.py load_email_templates &&
              python manage.py runserver 0.0.0.0:8002"
 
@@ -120,6 +130,7 @@ services:
     container_name: email_worker
     volumes:
       - ./email_service:/app
+      - ./scripts/wait-for-db.sh:/app/wait-for-db.sh
     env_file:
       - .env
     environment:
@@ -135,7 +146,10 @@ services:
         condition: service_healthy
       email_service:
         condition: service_started
-    command: celery -A config worker --loglevel=info --concurrency=4
+    command: >
+      sh -c "chmod +x /app/wait-for-db.sh &&
+             /app/wait-for-db.sh postgres 5432 ats_user ats_password email_db &&
+             celery -A config worker --loglevel=info --concurrency=4"
 
   email_beat:
     build:
@@ -144,6 +158,7 @@ services:
     container_name: email_beat
     volumes:
       - ./email_service:/app
+      - ./scripts/wait-for-db.sh:/app/wait-for-db.sh
     env_file:
       - .env
     environment:
@@ -159,7 +174,10 @@ services:
         condition: service_healthy
       email_service:
         condition: service_started
-    command: celery -A config beat --loglevel=info
+    command: >
+      sh -c "chmod +x /app/wait-for-db.sh &&
+             /app/wait-for-db.sh postgres 5432 ats_user ats_password email_db &&
+             celery -A config beat --loglevel=info"
 
   email_queue_consumer:
     build:
@@ -168,6 +186,7 @@ services:
     container_name: email_queue_consumer
     volumes:
       - ./email_service:/app
+      - ./scripts/wait-for-db.sh:/app/wait-for-db.sh
     env_file:
       - .env
     environment:
@@ -183,7 +202,10 @@ services:
         condition: service_healthy
       email_service:
         condition: service_started
-    command: python manage.py consume_email_queue --queue=email_queue
+    command: >
+      sh -c "chmod +x /app/wait-for-db.sh &&
+             /app/wait-for-db.sh postgres 5432 ats_user ats_password email_db &&
+             python manage.py consume_email_queue --queue=email_queue"
 
 volumes:
   postgres_data:

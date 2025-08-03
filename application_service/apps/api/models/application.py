@@ -60,27 +60,35 @@ class Application(models.Model):
 
     def advance_to_next_stage(self):
         """Move application to next workflow stage"""
-        if self.job.workflow and self.current_stage:
-            next_stages = self.job.workflow.steps.filter(
-                order__gt=self.current_stage.order
-            ).order_by("order")
-            if next_stages.exists():
-                self.current_stage = next_stages.first()
-                self.stage_order = self.current_stage.order
-                self.save()
-                return True
+        try:
+            job_workflow = getattr(self.job, "workflow", None)
+            if job_workflow and self.current_stage:
+                next_stages = job_workflow.steps.filter(
+                    order__gt=self.current_stage.order
+                ).order_by("order")
+                if next_stages.exists():
+                    self.current_stage = next_stages.first()
+                    self.stage_order = self.current_stage.order
+                    self.save()
+                    return True
+        except AttributeError:
+            # Job doesn't have a workflow
+            pass
         return False
 
     def move_to_stage(self, stage_id):
         """Move application to specific workflow stage"""
         try:
-            stage = WorkflowStep.objects.get(id=stage_id, workflow=self.job.workflow)
-            self.current_stage = stage
-            self.stage_order = stage.order
-            self.save()
-            return True
-        except WorkflowStep.DoesNotExist:
+            job_workflow = getattr(self.job, "workflow", None)
+            if job_workflow:
+                stage = WorkflowStep.objects.get(id=stage_id, workflow=job_workflow)
+                self.current_stage = stage
+                self.stage_order = stage.order
+                self.save()
+                return True
+        except (WorkflowStep.DoesNotExist, AttributeError):
             return False
+        return False
 
 
 class ApplicationStageHistory(models.Model):

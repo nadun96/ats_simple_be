@@ -2,6 +2,17 @@
 
 ## 🚀 Quick Start
 
+### Database Setup (Recommended First Time)
+```bash
+# Windows
+scripts\setup-databases.bat
+
+# Linux/Mac  
+chmod +x scripts/setup-databases.sh
+./scripts/setup-databases.sh
+```
+
+### Manual Start
 ```bash
 # Start all services
 ./start_services.bat    # Windows
@@ -13,6 +24,36 @@ docker-compose up -d --build
 # Run comprehensive tests
 python test_all_services.py
 ```
+
+## 📂 Project Structure
+
+```
+ats_simple_be/
+├── docs/                     # Documentation
+│   ├── API_DOCUMENTATION.md
+│   ├── DATABASE_SETUP.md     # Database setup guide
+│   ├── SETUP_SUMMARY.md      # Quick setup summary
+│   └── TROUBLESHOOTING.md
+├── scripts/                  # Setup and utility scripts
+│   ├── init-db.sh           # Database initialization
+│   ├── wait-for-db.sh       # Database readiness checker
+│   ├── setup-databases.sh   # One-click setup (Linux/Mac)
+│   ├── setup-databases.bat  # One-click setup (Windows)
+│   ├── check-databases.sh   # Database status checker
+│   └── reset-databases.sh   # Reset all data
+├── auth_service/            # Authentication microservice
+├── application_service/     # Core application logic
+├── email_service/          # Email and notifications
+├── notification_service/   # Push notifications (future)
+└── docker-compose.yml     # Container orchestration
+```
+
+## 📖 Documentation
+
+- **[Database Setup Guide](docs/DATABASE_SETUP.md)** - Complete database setup instructions
+- **[Setup Summary](docs/SETUP_SUMMARY.md)** - Quick reference for setup
+- **[API Documentation](docs/API_DOCUMENTATION.md)** - API endpoints and usage
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 
 ## 📋 Services Overview
 
