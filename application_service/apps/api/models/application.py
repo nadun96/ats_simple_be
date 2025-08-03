@@ -35,7 +35,7 @@ class Application(models.Model):
     form_answers = models.JSONField(
         default=dict, blank=True, null=True
     )  # Answers to job form
-    notes = models.TextField(blank=True, null=True)
+    application_notes = models.TextField(blank=True, null=True)
     internal_notes = models.TextField(blank=True, null=True)
     source = models.CharField(
         max_length=100, blank=True, null=True
