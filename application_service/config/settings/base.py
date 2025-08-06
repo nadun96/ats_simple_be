@@ -77,7 +77,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+print("🧪 DB Host:", env("DATABASE_HOST"))
+print("🧪 DB User:", env("DATABASE_USER"))
 # Database
 DATABASES = {
     "default": {
@@ -139,6 +140,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
 }
 
+
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
@@ -146,6 +148,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://3.83.252.93:8000",
+    "http://localhost",  # Add scheme here
+    "http://3.83.252.93",  # Optional, but include port if needed
 ]
 
 # Environment-specific DEBUG setting
