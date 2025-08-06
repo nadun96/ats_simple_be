@@ -1,0 +1,252 @@
+{
+	"job": {
+		"description": {
+			"society": {
+				"name": "XYZ Corporation",
+				"type": "Company",
+				"industry": "Technology",
+				"size": "500-1000 employees",
+				"logo": "https://example.com/logo.png",
+				"banner": "https://example.com/banner.jpg",
+				"contact": {
+					"email": "contact@xyz.com",
+					"phone": "+1 (123) 456-7890",
+					"address": "123 Business Rd, Suite 456, Cityville, ST 789 10",
+					"social": {
+						"linkedin": "https://www.linkedin.com/company/xyzcorporation",
+						"twitter": "https://twitter.com/xyzcorporation",
+						"facebook": "https://www.facebook.com/xyzcorporation"
+					}
+				},
+				"website": "https://xyzcorporation.com",
+				"description": "XYZ Corporation is a leading provider of innovative solutions in the tech industry, specializing in software development and IT consulting."
+			},
+			"job description": {
+				"urgency": "High",
+				"title": "Software Engineer",
+				"remoteStatus": {
+					"isRemote": true,
+					"type": "Hybrid",
+					"remoteType": "Hybrid",
+					"country": "USA",
+					"city": "San Francisco"
+				},
+				"country": "USA",
+				"city": "San Francisco",
+				"department": "Engineering",
+				"typeOfContract": "Full-time",
+				"contractDuration": {
+					"length": 12,
+					"unit": "months"
+				},
+				"experienceLevel": "Mid-level",
+				"language": "English",
+				"startDate": "2024-01-15",
+				"endDate": "2024-12-31",
+				"salary": {
+					"min": 70000,
+					"max": 120000,
+					"currency": "USD"
+				},
+				"level": "Senior",
+				"postTextHtml": "<p>Join our dynamic team at XYZ Corporation as a Software Engineer. We are looking for talented individuals who are passionate about technology and eager to contribute to innovative projects.</p>",
+				"postTextMarkdown": "Join our dynamic team at XYZ Corporation as a Software Engineer. We are looking for talented individuals who are passionate about technology and eager to contribute to innovative projects.",
+				"postTextPlain": "Join our dynamic team at XYZ Corporation as a Software Engineer. We are looking for talented individuals who are passionate about technology and eager to contribute to innovative projects.",
+				"applicationLink": "https://xyzcorporation.com/careers/apply",
+				"responsibilities": [
+					"Develop and maintain software applications",
+					"Collaborate with cross-functional teams",
+					"Participate in code reviews and testing"
+				],
+				"qualifications": [
+					"Bachelor's degree in Computer Science or related field",
+					"3+ years of experience in software development",
+					"Proficiency in Java, Python, or C++"
+				],
+				"benefits": [
+					"Health insurance",
+					"401(k) matching",
+					"Flexible work hours"
+				],
+				"applicationDeadline": "2024-01-01"
+			},
+			"settings": {
+				"isActive": true,
+				"isFeatured": false,
+				"isPublic": true,
+				"isDraft": false,
+				"isArchived": false,
+				"auduiance": "Public | Internal | Restricted",
+				"visibility": "Public",
+				"createdAt": "2023-10-01T12:00:00Z",
+				"updatedAt": "2023-10-15T12:00:00Z",
+				"applicationProcess": "Online application through our website"
+			},
+			"tag": {
+				"tagType": "job",
+				"tags": [
+					"Software Development",
+					"Engineering",
+					"Remote Work",
+					"Full-time"
+				]
+			}
+		},
+		"JobForm": {
+			"templateId": "job-application-form",
+			"templateName": "Job Application Form",
+			"templateDescription": "A form for job applications at XYZ Corporation",
+			"title": "Job Application Form",
+			"formFields": [
+				{
+					"isActive": true,
+					"fieldId": "fullName",
+					"fieldType": "text",
+					"fieldName": "Full Name",
+					"fieldDescription": "Please enter your full name as it appears on your resume.",
+					"fieldPlaceholder": "Enter your full name",
+					"fieldOptions": {
+						"maxLength": 100,
+						"minLength": 2,
+						"required": true
+					},
+					"isRequired": true,
+					"isMultiple": false,
+					"question": {
+						"fieldName": "fullName",
+						"fieldType": "text",
+						"options": {
+							"maxLength": 100,
+							"minLength": 2,
+							"required": true,
+							"placeholder": "Enter your full name"
+						}
+					},
+					"answer": {
+						"type": "text",
+						"value": "",
+						"isMultiple": false,
+						"correctAnswer": "",
+						"isRequired": true,
+						"answerOptions": []
+					}
+				}
+			]
+		},
+		"Team": {
+			"teamTemplateId": "engineering-team-template",
+			"teamTemplateName": "Engineering Team Template",
+			"teamId": "engineering-team",
+			"teamName": "Engineering Team",
+			"teamDescription": "The team responsible for software development and engineering projects at XYZ Corporation.",
+			"members": [
+				{
+					"memberId": "john-doe",
+					"name": "John Doe",
+					"role": "Lead Software Engineer",
+					"email": "contact@xyz.com"
+				}
+			]
+		},
+		"WorkFlow": {
+			"template": {
+				"templateId": "job-application-workflow",
+				"templateName": "Job Application Workflow Template",
+				"templateDescription": "A template for managing job applications at XYZ Corporation",
+				"name": "Job Application Workflow",
+				"description": "A workflow for managing job applications at XYZ Corporation",
+				"steps": [
+					{
+						"stepId": "application-received",
+						"stepName": "Application Received",
+						"stepDescription": "Initial step when a job application is received.",
+						"actions": [
+							{
+								"actionId": "send-confirmation-email",
+								"actionName": "Send Confirmation Email",
+								"actionType": "email",
+								"actionDescription": "Send a confirmation email to the applicant acknowledging receipt of their application.",
+								"emailTemplate": "confirmation-email-template",
+								"actionDetails": {
+									"to": "contact@xyz.com",
+									"from": "contact@xyz.com",
+									"subject": "Application Received",
+									"body": "Thank you for your application. We will review it and get back to you soon"
+								}
+							}
+						],
+						"order": 1,
+						"isActive": true,
+						"isRequired": true,
+						"tag": {
+							"tagType": "workflow",
+							"tags": [
+								"Application Process",
+								"Job Application"
+							]
+						},
+						"tasks": [
+							{
+								"taskId": "review-application",
+								"taskName": "Review Application",
+								"taskDescription": "Review the submitted job application and decide on the next steps.",
+								"assignee": {
+									"memberId": "john-doe",
+									"name": "John Doe",
+									"role": "Lead Software Engineer"
+								},
+								"dueDate": "2024-01-05",
+								"schedule": "2023-10-15T12:00:00Z",
+								"priority": "High",
+								"status": "Pending",
+								"comments": [
+									{
+										"commentId": "comment-1",
+										"author": "john-doe",
+										"content": "Initial review of the application.",
+										"timestamp": "2023-10-15T12:00:00Z"
+									}
+								]
+							}
+						],
+						"links": [
+							{
+								"type": "meeting",
+								"linkId": "application-form",
+								"linkName": "Job Application Form",
+								"linkUrl": "https://xyzcorporation.com/careers/apply",
+								"linkDescription": "Link to the job application form for applicants to submit their details.",
+								"isActive": false,
+								"expiresOn": "2024-01-01T12:00:00Z",
+								"createdAt": "2023-10-01T12:00:00Z",
+								"updatedAt": "2023-10-15T12:00:00Z"
+							}
+						]
+					}
+				]
+			}
+		},
+		"sites": [
+			{
+				"siteId": "xyz-careers",
+				"siteName": "XYZ Corporation Careers",
+				"siteDescription": "The official careers page for XYZ Corporation where job openings and application details are posted.",
+				"siteUrl": "https://xyzcorporation.com/careers",
+				"jobLink": "https://xyzcorporation.com/careers/job-openings",
+				"createdAt": "2023-10-01T12:00:00Z",
+				"updatedAt": "2023-10-15T12:00:00Z",
+				"postedOn": "2023-10-15T12:00:00Z",
+				"isLive": true,
+				"isDraft": false,
+				"isArchived": false,
+				"tags": [
+					"Careers",
+					"Job Openings",
+					"XYZ Corporation"
+				],
+				"status": "Active",
+				"visibility": "Public"
+			}
+		]
+	}
+}

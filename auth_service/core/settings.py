@@ -20,11 +20,15 @@ env = environ.Env(
         str,
         "django-insecure-ij-5hkmh*s2d0^s49kr*g-y%2dukld&2^#6s(2c^4byv_0u23p",
     ),
-    DATABASE_NAME=(str, "db_ats"),
-    DATABASE_USER=(str, "postgres"),
-    DATABASE_PASSWORD=(str, "KmUFDusYmLwnYGTQPZ5V"),
-    DATABASE_HOST=(str, "db-ats.cgtw64a4ev5q.us-east-1.rds.amazonaws.com"),
+    DATABASE_NAME=(str, "auth_db"),
+    DATABASE_USER=(str, "ats_user"),
+    DATABASE_PASSWORD=(str, "ats_password"),
+    DATABASE_HOST=(str, "postgres"),
     DATABASE_PORT=(str, "5432"),
+    AUTH_DATABASE_NAME=(str, "auth_db"),
+    AUTH_DATABASE_USER=(str, "ats_user"),
+    AUTH_DATABASE_PASSWORD=(str, "ats_password"),
+    AUTH_DATABASE_HOST=(str, "postgres"),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -96,10 +100,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DATABASE_NAME"),
-        "USER": env("DATABASE_USER"),
-        "PASSWORD": env("DATABASE_PASSWORD"),
-        "HOST": env("DATABASE_HOST"),
+        "NAME": env("AUTH_DATABASE_NAME"),
+        "USER": env("AUTH_DATABASE_USER"),
+        "PASSWORD": env("AUTH_DATABASE_PASSWORD"),
+        "HOST": env("AUTH_DATABASE_HOST"),
         "PORT": env("DATABASE_PORT"),
     }
 }

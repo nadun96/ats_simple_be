@@ -5,10 +5,10 @@ import environ
 env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, "django-insecure-change-this-in-production"),
-    DATABASE_NAME=(str, "db_ats"),
-    DATABASE_USER=(str, "postgres"),
-    DATABASE_PASSWORD=(str, "KmUFDusYmLwnYGTQPZ5V"),
-    DATABASE_HOST=(str, "db-ats.cgtw64a4ev5q.us-east-1.rds.amazonaws.com"),
+    DATABASE_NAME=(str, "ats_db"),
+    DATABASE_USER=(str, "ats_user"),
+    DATABASE_PASSWORD=(str, "ats_password"),
+    DATABASE_HOST=(str, "postgres"),
     DATABASE_PORT=(str, "5432"),
 )
 
@@ -88,6 +88,9 @@ DATABASES = {
         "PASSWORD": env("DATABASE_PASSWORD"),
         "HOST": env("DATABASE_HOST"),
         "PORT": env("DATABASE_PORT"),
+        "OPTIONS": {
+            "connect_timeout": 10,
+        },
     }
 }
 
@@ -126,19 +129,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # REST Framework configuration
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
 
-# CORS settings (will be overridden in environment-specific settings)
+
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://3.83.252.93:8000",
@@ -146,5 +155,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://3.83.252.93",  # Optional, but include port if needed
 ]
 
-# TODO: Remove this in production
-DEBUG=True
+# Environment-specific DEBUG setting
+DEBUG = env("DEBUG")
